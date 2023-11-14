@@ -23,10 +23,6 @@ class AMITree:
         self.tree = {}
 
     def addNode(self, path: str, nodes: list, files: list = []) -> dict:
-        print("Adding :", path)
-        print(nodes)
-        print(files)
-        print("...")
         # Remove any ignore list names
         nodes = list(set(nodes) - self.IGNORE_LIST)
         files = list(set(files) - self.IGNORE_LIST)
@@ -146,26 +142,7 @@ class AMIBuilder:
                     print("Going to create %s from %s" % (ami_name, source_ami))
                     self.build_ami(ami_name, self.existing_amis[source_ami], provisioner_script)
                     self.fetch_existing_amis()
-            """
-            ami_exists = self.ami_compare(ami_name, source_ami, provisioner_script)
-            ec2 = boto3.client('ec2')
-            response = ec2.describe_images(Filters=[
-            {
-                'Name': 'name',
-                'Values': [source_ami]
-                }
-            ])
-            images = response['Images']
-            # if len(images) == 0:
-            #     return None
-            # else:
-            #     return images[0]['ImageId']
 
-            if ami_exists:
-                print(f"{ami_name} with AMI ID {self.existing_amis[ami_name]} already exists")
-            else:
-                self.build_ami(ami_name, self.existing_amis[source_ami], provisioner_script)
-            """
 def main():
     # Path of this script
     root = subprocess.check_output("pwd").decode("utf-8").strip() + "/"
@@ -174,17 +151,14 @@ def main():
     # The tree object
     tree = AMITree()
 
-    print("Will be reading path: ", root + "ami")
     # Get all the files and subdirectories in this directory
     for dirpath, dirs, files in os.walk(root + "ami"):
         tree.addNode(dirpath[len(root):], dirs, files)
 
-    print(json.dumps(tree.get(), sort_keys=True, indent=4))
-
-    # ami_manager = AMIBuilder()
-    # ami_manager.fetch_existing_amis()
-    # ami_configs = tree.generateAMIList()
-    # ami_manager.process_amis(ami_configs)
+    ami_manager = AMIBuilder()
+    ami_manager.fetch_existing_amis()
+    ami_configs = tree.generateAMIList()
+    ami_manager.process_amis(ami_configs)
 
 if __name__ == "__main__":
     main()
