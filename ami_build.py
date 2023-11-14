@@ -166,7 +166,7 @@ def main():
     # Path of this script
     root = os.path.dirname(__file__) + "/"
     print(subprocess.check_output("pwd"))
-    print(subprocess.check_output("ls -al"))
+    print(subprocess.check_output("ls"))
 
     # The tree object    
     tree = AMITree()
@@ -177,10 +177,10 @@ def main():
 
     print(json.dumps(tree.get(), sort_keys=True, indent=4))
 
-    ami_manager = AMIBuilder()
-    ami_manager.fetch_existing_amis()
-    ami_configs = tree.generateAMIList()
-    ami_manager.process_amis(ami_configs)
+    # ami_manager = AMIBuilder()
+    # ami_manager.fetch_existing_amis()
+    # ami_configs = tree.generateAMIList()
+    # ami_manager.process_amis(ami_configs)
 
 if __name__ == "__main__":
     main()
