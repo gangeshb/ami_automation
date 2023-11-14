@@ -168,14 +168,15 @@ class AMIBuilder:
             """
 def main():
     # Path of this script
-    root = os.path.dirname(__file__) + "/"
+    root = subprocess.check_output("pwd").decode("utf-8").strip() + "/"
+    #root = os.path.dirname(__file__) + "/"
 
     # The tree object
     tree = AMITree()
 
-    print("Will be reading path: ", os.path.dirname(__file__) + "/ami")
+    print("Will be reading path: ", root + "ami")
     # Get all the files and subdirectories in this directory
-    for dirpath, dirs, files in os.walk(os.path.dirname(__file__) + "/ami"):
+    for dirpath, dirs, files in os.walk(root + "ami"):
         tree.addNode(dirpath[len(root):], dirs, files)
 
     print(json.dumps(tree.get(), sort_keys=True, indent=4))
