@@ -165,25 +165,22 @@ class AMIBuilder:
 def main():
     # Path of this script
     root = os.path.dirname(__file__) + "/"
+    print(subprocess.check_output("pwd"))
+    print(subprocess.check_output("ls -al"))
 
-    # The tree object
-    print(root)
-    print(subprocess.check_output("ls"))
+    # The tree object    
+    tree = AMITree()
     
-    # tree = AMITree()
-    
-    # # Get all the files and subdirectories in this directory
-    # for dirpath, dirs, files in os.walk(os.path.dirname(__file__) + "/ami"):
-    #     tree.addNode(dirpath[len(root):], dirs, files)
+    # Get all the files and subdirectories in this directory
+    for dirpath, dirs, files in os.walk(os.path.dirname(__file__) + "/ami"):
+        tree.addNode(dirpath[len(root):], dirs, files)
 
-    # print(json.dumps(tree.generateAMIList(), sort_keys=True, indent=4))
+    print(json.dumps(tree.get(), sort_keys=True, indent=4))
 
-    # ami_manager = AMIBuilder()
-    # ami_manager.fetch_existing_amis()
-
-    # ami_configs = tree.generateAMIList()
-
-    # ami_manager.process_amis(ami_configs)
+    ami_manager = AMIBuilder()
+    ami_manager.fetch_existing_amis()
+    ami_configs = tree.generateAMIList()
+    ami_manager.process_amis(ami_configs)
 
 if __name__ == "__main__":
     main()
