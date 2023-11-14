@@ -1,4 +1,4 @@
-name: Build AMI
+name: Build and Publish AMI
 
 on:
   push:
@@ -6,23 +6,28 @@ on:
       - main
 
 jobs:
-  build:
+  build-ami:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8  # You can adjust the Python version as needed
+      - name: Install Packer
+        run: |
+          wget https://releases.hashicorp.com/packer/1.7.6/packer_1.7.6_linux_amd64.zip
+          unzip packer_1.7.6_linux_amd64.zip
+          sudo mv packer /usr/local/bin/
+        if: success()
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install boto3
+      - name: Initialize Packer
+        run: packer init .
 
-    - name: Run ami_build.py
-      run: python ami_build.py
+      - name: Verify Packer Version
+        run: packer version
 
+      - name: Run ami_build.py
+        run: python ami_build.py
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
