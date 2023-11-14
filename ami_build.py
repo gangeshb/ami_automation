@@ -23,6 +23,10 @@ class AMITree:
         self.tree = {}
 
     def addNode(self, path: str, nodes: list, files: list = []) -> dict:
+        print("Adding :", path)
+        print(nodes)
+        print(files)
+        print("...")
         # Remove any ignore list names
         nodes = list(set(nodes) - self.IGNORE_LIST)
         files = list(set(files) - self.IGNORE_LIST)
@@ -165,8 +169,6 @@ class AMIBuilder:
 def main():
     # Path of this script
     root = os.path.dirname(__file__) + "/"
-    print(subprocess.check_output("pwd"))
-    print(subprocess.check_output("ls"))
 
     # The tree object    
     tree = AMITree()
