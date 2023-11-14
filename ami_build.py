@@ -170,9 +170,10 @@ def main():
     # Path of this script
     root = os.path.dirname(__file__) + "/"
 
-    # The tree object    
+    # The tree object
     tree = AMITree()
-    
+
+    print("Will be reading path: ", os.path.dirname(__file__) + "/ami")
     # Get all the files and subdirectories in this directory
     for dirpath, dirs, files in os.walk(os.path.dirname(__file__) + "/ami"):
         tree.addNode(dirpath[len(root):], dirs, files)
