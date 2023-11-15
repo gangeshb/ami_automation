@@ -112,7 +112,8 @@ class AMIBuilder:
         self.existing_amis = {}
 
     def fetch_existing_amis(self):
-        ami_query_result = subprocess.check_output(["aws", "ec2", "describe-images", "--query", "Images[*].[Name, ImageId]", "--owners", "self"])
+        #ami_query_result = subprocess.check_output(["aws", "ec2", "describe-images", "--query", "Images[*].[Name, ImageId]", "--owners", "self"])
+        ami_query_result = subprocess.check_output(["/usr/bin/aws", "ec2", "describe-images", "--query", "Images[*].[Name, ImageId]", "--owners", "self"])
         ami_data = eval(ami_query_result.decode("utf-8"))
 
         for ami_name, existing_ami_id in ami_data:
